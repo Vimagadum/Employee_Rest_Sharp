@@ -43,13 +43,70 @@ namespace Employee_Rest_Sharp
             // Assert
             Assert.AreEqual(response.StatusCode, HttpStatusCode.OK);
             List<Employee> dataResponse = JsonConvert.DeserializeObject<List<Employee>>(response.Content);
-            Assert.AreEqual(4, dataResponse.Count);
+            Assert.AreEqual(7, dataResponse.Count);
 
             foreach (Employee emp in dataResponse)
             {
                 System.Console.WriteLine("id: " + emp.id + ", Name: " + emp.first_name + ", Salary: " + emp.salary);
             }
         }
+        //UC2
+        [TestMethod]
+        public void OnCallingPostAPI_ReturnEmployeeObject()
+        {
+            // Arrange
+            // endpoint and POST method
+            RestRequest request = new RestRequest("/employees/add_emp", Method.Post);
+            
+            request.AddHeader("Content-type", "application/json");
+            request.AddJsonBody(
+            new
+            {
+                first_name = "Clark",
+                salary = "15000"
+            });
+
+            //Act
+            RestResponse response = client.PostAsync(request).Result;
+
+            //Assert
+            Assert.AreEqual(response.StatusCode, HttpStatusCode.Created);
+            Employee dataResponse = JsonConvert.DeserializeObject<Employee>(response.Content);
+            Assert.AreEqual("Clark", dataResponse.first_name);
+            Assert.AreEqual("15000", dataResponse.salary);
+            System.Console.WriteLine(response.Content);
+        }
+
+        [TestMethod]
+        public void addMultipleEmployee()
+        {
+            List<Employee> employees = new List<Employee>();
+            employees.Add(new Employee { first_name="Jackson",salary="33000" });
+            employees.Add(new Employee { first_name = "Mine", salary = "50000" });
+            foreach(Employee emp in employees)
+            {
+                RestRequest request = new RestRequest("/employees/add_emp", Method.Post);
+                request.AddHeader("Content-type", "application/json");
+                request.AddJsonBody(
+                new
+                {
+                    first_name = emp.first_name,
+                    salary = emp.salary
+                });
+                //Act
+                RestResponse response = client.PostAsync(request).Result;
+
+                //Assert
+                Assert.AreEqual(response.StatusCode, HttpStatusCode.Created);
+                Employee dataResponse = JsonConvert.DeserializeObject<Employee>(response.Content);
+                Assert.AreEqual(emp.first_name, dataResponse.first_name);
+                Assert.AreEqual(emp.salary, dataResponse.salary);
+                System.Console.WriteLine(response.Content);
+            }
+            
+        }
+
+
     }
 }
 
