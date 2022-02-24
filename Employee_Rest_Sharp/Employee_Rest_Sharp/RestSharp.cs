@@ -76,14 +76,13 @@ namespace Employee_Rest_Sharp
             Assert.AreEqual("15000", dataResponse.salary);
             System.Console.WriteLine(response.Content);
         }
-
         [TestMethod]
         public void addMultipleEmployee()
         {
             List<Employee> employees = new List<Employee>();
-            employees.Add(new Employee { first_name="Jackson",salary="33000" });
+            employees.Add(new Employee { first_name = "Jackson", salary = "33000" });
             employees.Add(new Employee { first_name = "Mine", salary = "50000" });
-            foreach(Employee emp in employees)
+            foreach (Employee emp in employees)
             {
                 RestRequest request = new RestRequest("/employees/add_emp", Method.Post);
                 request.AddHeader("Content-type", "application/json");
@@ -103,10 +102,8 @@ namespace Employee_Rest_Sharp
                 Assert.AreEqual(emp.salary, dataResponse.salary);
                 System.Console.WriteLine(response.Content);
             }
-            
+
         }
-
-
     }
 }
 
