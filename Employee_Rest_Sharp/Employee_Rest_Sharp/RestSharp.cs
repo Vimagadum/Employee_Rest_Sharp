@@ -104,6 +104,29 @@ namespace Employee_Rest_Sharp
             }
 
         }
+        [TestMethod]
+        public void UpdateEmployee()
+        {
+            // Arrange
+            RestRequest request = new RestRequest("/employees/update_emp/9", Method.Put);
+            request.AddHeader("Content-type", "application/json");
+            request.AddJsonBody(
+            new
+            {
+                first_name = "Raju",
+                salary = "45000"
+            });
+            // Act
+            RestResponse response = client.ExecuteAsync(request).Result;
+
+            // Assert
+            Assert.AreEqual(HttpStatusCode.OK, response.StatusCode);
+            Employee employee = JsonConvert.DeserializeObject<Employee>(response.Content);
+            Assert.AreEqual("Raju", employee.first_name);
+            Assert.AreEqual("45000", employee.salary);
+            Console.WriteLine(response.Content);
+        }
+
     }
 }
 
